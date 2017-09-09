@@ -2,6 +2,10 @@ require "minruby"
 
 def evaluate(tree, env)
   case tree[0]
+  when "while"
+    while evaluate(tree[1], env)
+      evaluate(tree[2], env)
+    end
   when "if"
     if evaluate(tree[1], env)
       evaluate(tree[2], env)
@@ -18,8 +22,16 @@ def evaluate(tree, env)
     evaluate(tree[1], env) * evaluate(tree[2], env)
   when "/"
     evaluate(tree[1], env) / evaluate(tree[2], env)
+  when "%"
+    evaluate(tree[1], env) % evaluate(tree[2], env)
+  when "**"
+    evaluate(tree[1], env) ** evaluate(tree[2], env)
   when "=="
     evaluate(tree[1], env) == evaluate(tree[2], env)
+  when ">"
+    evaluate(tree[1], env) > evaluate(tree[2], env)
+  when "<"
+    evaluate(tree[1], env) < evaluate(tree[2], env)
   when "var_assign"
     env[tree[1]] = evaluate(tree[2], env)
   when "var_ref"
@@ -45,21 +57,3 @@ tree = minruby_parse(str)
 
 env = {}
 answer = evaluate(tree, env)
-
-
-# when "%"
-#   evaluate(tree[1])
-#   evaluate(tree[2])
-#   left % right
-# when "**"
-#   evaluate(tree[1])
-#   evaluate(tree[2])
-#   left ** right
-# when ">"
-#   evaluate(tree[1])
-#   evaluate(tree[2])
-#   left > right
-# when "<"
-#   evaluate(tree[1])
-#   evaluate(tree[2])
-#   left < right
