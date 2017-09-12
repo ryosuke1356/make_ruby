@@ -1,12 +1,7 @@
 require "minruby"
 
 pp(minruby_parse("
-case 42
-when 0
-  p(0)
-when 1
-  p(1)
-else
-  p(2)
+def add(x, y)
+  x + y
 end
 "))
