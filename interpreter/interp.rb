@@ -68,8 +68,18 @@ def evaluate(tree, genv, lenv)
   when "ary_assign"
     ary = evaluate(tree[1], genv, lenv)
     idx = evaluate(tree[2], genv, lenv)
-    value = evaluate(tree[3], genv, lenv)
+    val = evaluate(tree[3], genv, lenv)
     ary[idx] = value
+  when "hash_new"
+    hsh = {}
+    i = 0
+    while tree[i + 1]
+      key = evaluate(tree[i + 1], genv, lenv)
+      val = evaluate(tree[i + 2], genv, lenv)
+      i = i + 2
+      hsh[key] = val
+    end
+    hsh
   when "func_def"
     genv[tree[1]] = ["user_defined", tree[2], tree[3]] # [ func_def, "関数名", [引数], [関数の中身] ]
   when "func_call"

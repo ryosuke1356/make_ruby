@@ -1,6 +1,5 @@
 require "minruby"
 
 pp(minruby_parse("
-ary = [1]
-ary[0] = 42
+{1 => 10, 2 => 20, 3 => 30}
 "))
