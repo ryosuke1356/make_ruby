@@ -3,6 +3,10 @@ require "minruby"
 lenv = {}
 genv = {
   "p" => ["builtin", "p"],
+  "require" => ["builtin", "require"],
+  "minruby_parse" => ["builtin", "minruby_parse"],
+  "minruby_load" => ["builtin", "minruby_load"],
+  "minruby_call" => ["builtin", "minruby_call"],
   "add" => ["builtin", "add"],
   "fizz_buzz" => ["builtin", "fizz_buzz"]
 }
@@ -25,12 +29,16 @@ def evaluate(tree, genv, lenv)
     evaluate(tree[1], genv, lenv) ** evaluate(tree[2], genv, lenv)
   when "=="
     evaluate(tree[1], genv, lenv) == evaluate(tree[2], genv, lenv)
+  when "!="
+    evaluate(tree[1], genv, lenv) != evaluate(tree[2], genv, lenv)
   when ">"
     evaluate(tree[1], genv, lenv) > evaluate(tree[2], genv, lenv)
   when "<"
     evaluate(tree[1], genv, lenv) < evaluate(tree[2], genv, lenv)
   when "<="
     evaluate(tree[1], genv, lenv) <= evaluate(tree[2], genv, lenv)
+  when "=>"
+    evaluate(tree[1], genv, lenv) >= evaluate(tree[2], genv, lenv)
   when "while"
     while evaluate(tree[1], genv, lenv)
       evaluate(tree[2], genv, lenv)
@@ -69,7 +77,7 @@ def evaluate(tree, genv, lenv)
     ary = evaluate(tree[1], genv, lenv)
     idx = evaluate(tree[2], genv, lenv)
     val = evaluate(tree[3], genv, lenv)
-    ary[idx] = value
+    ary[idx] = val
   when "hash_new"
     hsh = {}
     i = 0
