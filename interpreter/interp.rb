@@ -9,16 +9,6 @@ genv = {
 
 def evaluate(tree, genv, lenv)
   case tree[0]
-  when "while"
-    while evaluate(tree[1], genv, lenv)
-      evaluate(tree[2], genv, lenv)
-    end
-  when "if"
-    if evaluate(tree[1], genv, lenv)
-      evaluate(tree[2], genv, lenv)
-    else
-      evaluate(tree[3], genv, lenv)
-    end
   when "lit"
     tree[1]
   when "+"
@@ -41,10 +31,16 @@ def evaluate(tree, genv, lenv)
     evaluate(tree[1], genv, lenv) < evaluate(tree[2], genv, lenv)
   when "<="
     evaluate(tree[1], genv, lenv) <= evaluate(tree[2], genv, lenv)
-  when "var_assign"
-    lenv[tree[1]] = evaluate(tree[2], genv, lenv)
-  when "var_ref"
-    lenv[tree[1]]
+  when "while"
+    while evaluate(tree[1], genv, lenv)
+      evaluate(tree[2], genv, lenv)
+    end
+  when "if"
+    if evaluate(tree[1], genv, lenv)
+      evaluate(tree[2], genv, lenv)
+    else
+      evaluate(tree[3], genv, lenv)
+    end
   when "stmts"
     i = 1
     last = nil
@@ -53,6 +49,27 @@ def evaluate(tree, genv, lenv)
       i = i + 1
     end
     last
+  when "var_assign"
+    lenv[tree[1]] = evaluate(tree[2], genv, lenv)
+  when "var_ref"
+    lenv[tree[1]]
+  when "ary_new"
+    ary = []
+    i = 0
+    while tree[i + 1]
+      ary[i] = evaluate(tree[i + 1], genv, lenv)
+      i = i + 1
+    end
+    ary
+  when "ary_ref"
+    ary = evaluate(tree[1], genv, lenv)
+    idx = evaluate(tree[2], genv, lenv)
+    ary[idx]
+  when "ary_assign"
+    ary = evaluate(tree[1], genv, lenv)
+    idx = evaluate(tree[2], genv, lenv)
+    value = evaluate(tree[3], genv, lenv)
+    ary[idx] = value
   when "func_def"
     genv[tree[1]] = ["user_defined", tree[2], tree[3]] # [ func_def, "関数名", [引数], [関数の中身] ]
   when "func_call"

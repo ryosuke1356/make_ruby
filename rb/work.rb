@@ -1,7 +1,6 @@
 require "minruby"
 
 pp(minruby_parse("
-def add(x, y)
-  x + y
-end
+ary = [1]
+ary[0] = 42
 "))
